@@ -1,0 +1,30 @@
+.admain{
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+    font-size: 1.5rem;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+    text-transform: capitalize;
+    padding: 8% 36%;
+}
+
+.admain div{
+    width: 100%;
+    text-align: center;
+    height: 8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #b2f7fd8a;
+    border-radius: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.5s;
+}
+
+.admain div:hover{
+    background: #98f6ffe6;
+}

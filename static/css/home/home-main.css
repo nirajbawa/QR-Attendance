@@ -1,0 +1,171 @@
+.main-body{
+    width: 100%;
+    height: 63.9rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.leftdiv{
+    height: 100%;
+}
+
+.leftdiv img{
+    height: 89%;
+    position: relative;
+    bottom: -7rem;
+}
+
+.rightdiv{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rightdiv form{
+    width: 34rem;
+    height: 48rem;
+    background-color: #c8fffa;
+    border-radius: 1rem;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+.rightdiv form h1{
+    text-align: center;
+    text-transform: uppercase;
+    background: #0d6efdd1;
+    color: #ffffff;
+    padding: 1rem;
+    letter-spacing: .1rem;
+    font-weight: 700;
+    border-radius: 1rem 1rem 0rem 0rem;
+}
+
+.rightdiv form div{
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.rightdiv form button{
+    height: 5rem;
+    font-size: 2rem;
+    text-transform: capitalize;
+    border-radius: 0rem 0rem 1rem 1rem;
+}
+
+.form-control-lg {
+    min-height: calc(3.5em + (0rem + 2px));
+    text-transform: capitalize;
+    font-size: 1.5rem;
+}
+
+.loader{
+    width: 100%;
+    height: 100%;
+}
+
+@media only screen and (max-width: 1040px)
+{
+    .leftdiv img {
+        height: 80%;
+        position: relative;
+        bottom: -16rem;
+    }
+    .main-body {
+        width: 100% !important;
+        height: 80.5rem;
+    }
+}
+
+
+
+@media only screen and (max-width: 840px)
+{
+    .main-body {
+        width: 100% !important;
+        height: 91.5rem;
+    }
+    .leftdiv img {
+        height: 59%;
+        position: relative;
+        bottom: -38rem;
+    }
+}
+
+@media only screen and (max-width: 700px)
+{
+.main-body {
+    width: 100%;
+    height: 109.8rem;
+}
+.leftdiv img {
+    height: 59%;
+    position: relative;
+    bottom: -45rem;
+}
+.leftdiv img {
+    height: 49%;
+    position: relative;
+    bottom: -56rem;
+
+}
+}
+
+@media only screen and (max-width: 560px)
+{
+
+.leftdiv img {
+    height: 49%;
+    position: relative;
+    bottom: -56rem;
+    left: -5rem;
+    width: 131%;
+}
+
+}
+
+@media only screen and (max-width: 500px)
+{
+
+    .main-body {
+        width: 100%;
+        height: 94vh;
+        flex-direction: column-reverse;
+        padding-top: 7%;
+    }
+    .leftdiv {
+        height: 50%;
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        flex-direction: column;
+    }
+
+.leftdiv img {
+    height: auto;
+    position: static;
+    width: 84%;
+}
+
+}
+
+@media only screen and (max-width: 300px)
+{
+    .main-body {
+        width: 100%;
+        height: 94vh;
+        flex-direction: column-reverse;
+        padding-top: 25%;
+    }
+}
