@@ -7,7 +7,7 @@ function signinbtncall() {
             if (document.getElementById("signinemail").value.match(
                 /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
             )) {
-                let api = window.location.href + '/sign-in'
+                let api = '/sign-in'
                 let email = document.getElementById("signinemail").value;
                 document.getElementById("hfrom").innerHTML = '<div class="loader"> <div class="spinner-border" role="status"> <span class="visually-hidden">Loading...</span></div> </div>';
                 fetch(api, {
@@ -32,7 +32,7 @@ function signinbtncall() {
                     // Displaying results to console
                     .then(json => {
                         if (json.code == 0) {
-                            getHomeF.innerHTML = '<h1>sign in</h1> <div id="forminputfield"> <p style="font-size: 1.5rem;" id="siginmsg">Please Check Your Inbox And Enter OTP</p> <input class="form-control form-control-lg" type="text" id="signinotp" name = "signupotp" placeholder="OTP" aria-label=".form-control-lg example"><a onClick = "signin()" style= "font-size: 1.5rem;">Resend OTP</a></div> <button type="button" class="btn btn-primary" id="signinotpbtn"><i class="fa-solid fa-arrow-right"></i></button>';
+                            getHomeF.innerHTML = '<h1>sign in</h1> <div id="forminputfield"> <p style="font-size: 1.5rem;" id="siginmsg">Please Check Your Inbox And Enter OTP</p> <input class="form-control form-control-lg" type="text" id="signinotp" name = "signupotp" placeholder="OTP" autocomplete="off" aria-label=".form-control-lg example"><a onClick = "signin()" style= "font-size: 1.5rem;">Resend OTP</a></div> <button type="button" class="btn btn-primary" id="signinotpbtn"><i class="fa-solid fa-arrow-right"></i></button>';
                             event.target.innerText = "Sign in";
                             event.target.id = "Signinotpbtn";
                             signinotp();
@@ -40,6 +40,7 @@ function signinbtncall() {
                         }
                         else {
                             alert(json.status);
+                            window.location.reload()
                         }
                     })
                     .catch((e) => { 
@@ -130,7 +131,7 @@ function signupbtn() {
                     .then(response => response.json())
                     .then(json => {
                         if (json.code == "0") {
-                            document.getElementById("hfrom").innerHTML = '<h1>sign up</h1> <div id="forminputfield"> <p style="font-size: 1.5rem;" id="otpmsg">Please Check Your Inbox And Enter OTP</p> <input class="form-control form-control-lg" type="text" id="signupotp" name = "signupotp" placeholder="OTP" aria-label=".form-control-lg example"><a onClick = "signup()" style= "font-size: 1.5rem;">Resend OTP</a></div> <button type="button" class="btn btn-primary" id="createaccount"><i class="fa-solid fa-arrow-right"></i></button>';
+                            document.getElementById("hfrom").innerHTML = '<h1>sign up</h1> <div id="forminputfield"> <p style="font-size: 1.5rem;" id="otpmsg">Please Check Your Inbox And Enter OTP</p> <input class="form-control form-control-lg" type="text" id="signupotp" name = "signupotp" placeholder="OTP" autocomplete="off" aria-label=".form-control-lg example"><a onClick = "signup()" style= "font-size: 1.5rem;">Resend OTP</a></div> <button type="button" class="btn btn-primary" id="createaccount"><i class="fa-solid fa-arrow-right"></i></button>';
                             createaccountotp();
                             document.getElementById("otpmsg").innerText = json.status;
                         }
@@ -157,7 +158,7 @@ function signupbtn() {
 function createaccountotp() {
     document.getElementById("createaccount").addEventListener("click", () => {
         if (document.getElementById("signupotp").value.length) {
-            let api = window.location.href + '/createAccout';
+            let api = '/createAccout';
             fetch(api, {
                 method: "POST",
                 body: JSON.stringify({

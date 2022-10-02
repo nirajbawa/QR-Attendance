@@ -2,7 +2,14 @@ from flask import *
 from flask_mail import Mail
 import random
 from flask_mysqldb import MySQL
+import pyqrcode
+import png
+from pyqrcode import QRCode
+import os
+import json
+from datetime import date, datetime
 
+ 
 defaultData = {
     "Title": "QR Attendance",
     "favicons": ["favicon_11-9-2022/apple-touch-icon.png", "favicon_11-9-2022/favicon-32x32.png", "favicon_11-9-2022/favicon-16x16.png", "favicon_11-9-2022/site.webmanifest", "favicon_11-9-2022/safari-pinned-tab.svg"],
@@ -33,6 +40,8 @@ app.config.update(
     MAIL_PASSWORD=params['Emailpassword']
 )
 
+
+
 mail = Mail(app)
 
 # mysql config
@@ -41,7 +50,6 @@ app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'qrattendance'
-
 
 mysql = MySQL(app)
 
@@ -93,7 +101,7 @@ def signIn():
                                 })
 
         except Exception as e:
-            return jsonify({"status": "failed"})
+            return jsonify({"status": "Eamil Is Not Register With Us please Create Account First"})
     else:
         return jsonify({"status": "failed"})
 
@@ -105,8 +113,8 @@ def signinOtp():
         if "SOTP" in session:
             if (str(Uotp) == str(session['SOTP'])):
                 session["user"] = session['Semail']
-                session.pop("Semail");
-                session.pop("SOTP");
+                session.pop("Semail")
+                session.pop("SOTP")
                 return jsonify({"status": "sign in successfully",
                                 "url": "/Admin",
                                 "code": "0"
@@ -134,14 +142,13 @@ def signUp():
 
         try:
             cur = mysql.connection.cursor()
-            cur.execute(
-                '''select email from users where email = %s;''', [email])
+            print("hello")
+            cur.execute("SELECT COUNT(email) FROM `users` WHERE email = '"+email+"';")
             numofrow = cur.fetchall()
-            print(len(numofrow))
             mysql.connection.commit()
             cur.close()
 
-            if (len(numofrow) == 0):
+            if (numofrow[0][0] == 0):
                 session["email"] = email
                 session["institutename"] = instname
                 session["institutetype"] = instype
@@ -160,16 +167,18 @@ def signUp():
                                 })
 
         except Exception as e:
-
+            session["email"] = email
+            session["institutename"] = instname
+            session["institutetype"] = instype
             mail.send_message('New Message Send From QR Attendance',
                               sender=params["email"],
-                              recipients=[session["email"]],
+                              recipients=[email],
                               body="OTP : " + str(otp)
                               )
             session['cotp'] = otp
-            return jsonify({"status": "success",
-                            "code": "0"
-                            })
+            return jsonify({"status": "OTP Sent On Your Email",
+                                "code": "0"
+                                })
 
 
 @app.route('/createAccout', methods=['GET', 'POST'])
@@ -224,16 +233,16 @@ def createAccout():
                             "code": "1"
                             })
 
+
 @app.route('/signout', methods=['GET'])
 def signout():
-    if("user" in session):
+    if ("user" in session):
         session.pop("user")
         return redirect(url_for("home"))
     else:
         return redirect(url_for("home"))
-    
-    
-    
+
+
 @app.route('/Admin')
 def admin():
     if "user" in session:
@@ -241,12 +250,311 @@ def admin():
         defaultData["menuItems"] = ""
         defaultData["adminItems"] = ["home", "signout"]
         defaultData["adminItemslinks"] = ["/Admin", "/signout"]
-        return render_template("admin.html", data=defaultData)
+        albox = {}
+        if("almsg" in session):
+            print("yes")
+            albox = {"alboxd":"block", "alboxm": session["almsg"], "albc":session["alcode"]}
+            session.pop("almsg")
+            session.pop("alcode")
+        else:
+            albox = {"alboxd":"none", "alboxm":"", "albc":""}
+        return render_template("admin.html", data=defaultData, aldata=albox)
     else:
         return redirect(url_for('home'))
+
+
+@app.route('/Admin/creare-new-batch', methods=['GET', 'POST'])
+def createNewBatch():
+    if "user" in session:
+        defaultData["pageCss"] = [
+            "admin/create-new-batch/create-new-batch.css"]
+        defaultData["menuItems"] = ""
+        defaultData["adminItems"] = ["home", "signout"]
+        defaultData["adminItemslinks"] = ["/Admin", "/signout"]
+
+        createNewBatchdata = {
+            "createNewBatchdata": ["js/create-batch.js"]
+        }
+        try:
+            cursor = mysql.connection.cursor()
+            cursor.execute(
+                "SELECT bName, id FROM `"+session['user']+"_batchs`;")
+            numofrow = cursor.fetchall()
+            rowlen = len(numofrow)
+            print(numofrow)
+            mysql.connection.commit()
+            cursor.close()
+        except Exception as e:
+            numofrow = ""
+        return render_template("create-batch.html", data=defaultData, createNewBatchdata=createNewBatchdata, numofrow=numofrow)
+    else:
+        return redirect(url_for('home'))
+
+
+@app.route('/Admin/batchApi', methods=['GET', 'POST'])
+def createNewBatchapi():
+    if (request.method == 'POST' and "user" in session):
+        data = request.json["data"]
+        tbname = session["user"] + "_batchs"
+        bname = data["bName"]
+        bsubjects = json.dumps(data["bsubjects"])
+        bstime = data["CsT"]
+        betime = data["CeT"]
+        try:
+            cursor = mysql.connection.cursor()
+            cursor.execute("INSERT INTO `"+session['user']+"_batchs` (`id`, `bName`, `bSubjects`, `bsTime`, `beTime`, `Etime`) VALUES (NULL, '" +
+                           bname+"', '"+bsubjects+"', '"+bstime+"', '"+betime+"', current_timestamp());")
+            mysql.connection.commit()
+            cursor.close()
+            return jsonify({"status": "Account Created Successfully",
+                            "code": "0"
+                            })
+        except Exception as e:
+            # CREATE TABLE `qrattendance`.`nirajbava222@gmail.comd_batchs` (`id` INT(50) NOT NULL AUTO_INCREMENT , `bName` TEXT NOT NULL , `bSubjects` TEXT NOT NULL , `bsTime` TEXT NOT NULL , `beTime` TEXT NOT NULL , `Etime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+            cursor = mysql.connection.cursor()
+            cursor.execute("CREATE TABLE `"+tbname+"` (`id` INT(50) NOT NULL AUTO_INCREMENT , `bName` TEXT NOT NULL , `bSubjects` TEXT NOT NULL , `bsTime` TEXT NOT NULL , `beTime` TEXT NOT NULL , `Etime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;")
+            cursor.execute("INSERT INTO `"+session['user']+"_batchs` (`id`, `bName`, `bSubjects`, `bsTime`, `beTime`, `Etime`) VALUES (1, '" +
+                           bname+"', '"+bsubjects+"', '"+bstime+"', '"+betime+"', current_timestamp());")
+            mysql.connection.commit()
+            cursor.close()
+            return jsonify({"status": "Account Created Successfully",
+                            "code": "0"
+                            })
+
+    else:
+        return jsonify({"status": "Try Again"})
+
+
+@app.route('/Admin/addstudents/<string:id>', methods=['GET', 'POST'])
+def addStudents(id):
+    if ("user" in session):
+        defaultData["pageCss"] = ["admin/add-students/add-students.css"]
+        defaultData["menuItems"] = ""
+        defaultData["adminItems"] = ["home", "signout"]
+        defaultData["adminItemslinks"] = ["/Admin", "/signout"]
+
+        addstudents = {
+            "addstudentsdata": ["js/add-students.js"]
+        }
+        salt = {"altmsg":"", "altd":"none"}
+        if("saltmsg" in session):
+            salt = {"altmsg":session["saltmsg"], "altd":"block"}
+            session.pop("saltmsg")
+            
+        print(id)
+        try:
+
+            cursor = mysql.connection.cursor()
+            cursor.execute(
+                "SELECT * FROM `"+session['user']+"_students` WHERE bid = "+id+";")
+            rows = cursor.fetchall()
+            mysql.connection.commit()
+            cursor.close()
+        
+        except Exception as e:
+            rows = ""
+        return render_template("add-students.html", data=defaultData, addstudents=addstudents, rows=rows, batchid = str(id), saltdata = salt)
+    else:
+        return ("/")
     
-@app.route('/Admin/creare-new-batch')
-def createNewBatch
+
+@app.route('/Admin/addNS/', methods=['GET', 'POST'])
+def addNS():
+    if ("user" in session and request.method == 'POST'):    
+        
+        name = request.form.get("sname")
+        email = request.form.get("semail")
+        id = request.form.get("bid")
+        rollno = request.form.get("rollno")
+        try:
+            cursor = mysql.connection.cursor()
+            cursor.execute("INSERT INTO `"+session['user']+"_students` (`sid`, `bid`, `name`, `email`, `EdateT`) VALUES ("+rollno+", "+id+", '"+name+"', '"+email+"', current_timestamp());")
+            mysql.connection.commit()
+            cursor.close()
+            return redirect("/Admin/addstudents/"+str(id))
+        except Exception as e:
+            try:
+                cursor = mysql.connection.cursor()
+                cursor.execute("CREATE TABLE `"+session['user']+"_students` (`sid` INT NOT NULL, `bid` INT(100) NOT NULL , `name` TEXT NOT NULL , `email` TEXT NOT NULL , `EdateT` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`sid`)) ENGINE = InnoDB;")
+                cursor.execute("INSERT INTO `"+session['user']+"_students` (`sid`, `bid`, `name`, `email`, `EdateT`) VALUES ("+rollno+", "+id+", '"+name+"', '"+email+"', current_timestamp());")
+                mysql.connection.commit()
+                cursor.close()
+                return redirect("/Admin/addstudents/"+str(id))
+            except Exception as e:
+                session["saltmsg"] = "Please enter valid student information and make sure your Roll No is unique..."
+                return redirect("/Admin/addstudents/"+str(id))
+    else:
+        return redirect("/")
+
+
+@app.route('/Admin/qrdown/<string:bid>/<string:sid>/<string:eid>', methods=['GET', 'POST'])
+def qrdownload(bid,sid,eid):
+    if ("user" in session):
+        s = 'http://127.0.0.1:5000/Admin/scanner/'+bid+'/'+sid+'/'+session["user"]
+        # Generate QR code
+        url = pyqrcode.create(s)
+        otp = random.randint(1000, 1000000)
+        # Create and save the svg file naming "myqr.svg"
+        abspath  = os.path.abspath(os.getcwd())
+        durl = os.path.join(abspath+"\\static\\images\\qrcodes\\myqr_"+str(otp)+"_"+sid+"_"+bid+".png")
+        url.png(durl, scale = 6)
+        return send_file(durl, as_attachment=True)
+    else:
+        return redirect("/")
+        
+@app.route('/Admin/records/<string:sub>/<string:bid>/', methods=['GET', 'POST'])
+def records(sub, bid):
+    if ("user" in session):  
+        defaultData["pageCss"] = ["admin/records/records.css"]
+        defaultData["menuItems"] = ""
+        defaultData["adminItems"] = ["home", "signout"]
+        defaultData["adminItemslinks"] = ["/Admin", "/signout"]  
+        records = {
+            "recordsdata": ["js/records.js"]
+        }
+        row = ""
+        da = ""
+        try:
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT bSubjects FROM `"+session['user']+"_batchs` WHERE id = "+bid+";")
+            d = cur.fetchall()
+            da = json.loads(d[0][0])
+            mysql.connection.commit()
+            cur.close()
+            
+            if(sub=="all"):
+            
+                cursor = mysql.connection.cursor()
+                cursor.execute("select * from `"+session['user']+"_records` where bid = "+bid+";")
+                
+                row = cursor.fetchall()
+                mysql.connection.commit()
+                cursor.close()
+            elif(sub=="tdayr"):
+                today = date.today()
+                print(today)
+                cursor = mysql.connection.cursor()
+                cursor.execute("select * from `"+session['user']+"_records` where bid = "+bid+" and edate = '"+str(today)+"';")
+                row = cursor.fetchall()
+                mysql.connection.commit()
+                cursor.close()
+                
+            else:
+                cursor = mysql.connection.cursor()
+                today = date.today()
+                cursor.execute("select * from `"+session['user']+"_records` where bid = "+bid+" and subject = '"+sub+"' and edate = '"+str(today)+"';")
+                row = cursor.fetchall()
+                mysql.connection.commit()
+                cursor.close()
+            
+        except Exception as e:
+            redirect("/Admin/creare-new-batch")
+        return render_template("records.html", data=defaultData, records=records, row=row, d = da, id=bid)
+
+
+@app.route('/Admin/scanner/<string:bid>/<string:sid>/<string:semail>', methods=['GET'])
+def scanner(bid, semail, sid):
+    if ("user" in session and session["user"] == semail):
+        defaultData["pageCss"] = ["admin/scanner/scanner.css"]
+        defaultData["menuItems"] = ""
+        defaultData["adminItems"] = ["home", "signout"]
+        defaultData["adminItemslinks"] = ["/Admin", "/signout"]  
+        scanner = {
+            "scannerdata": ["js/scanner.js"]
+        }
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT bsubjects FROM `"+session['user']+"_batchs` WHERE id= "+sid+";")
+        d = cur.fetchall()
+        da = json.loads(d[0][0])
+        print(da)
+        mysql.connection.commit()
+        cur.close()
+        
+        return render_template("scanner.html", data=defaultData, scanner=scanner, d=da, semail=semail, sid=bid, bid=sid)
+    else:
+        return redirect("/")
+        
+        
+@app.route('/Admin/addattendance/<string:sid>/<string:bid>/<string:umail>/<string:sub>', methods=['GET'])
+def addattendance(sid,umail,sub, bid):
+    if ("user" in session and session["user"] == umail):
+        try:
+            curtime = mysql.connection.cursor()
+            curtime.execute("SELECT bsTime, beTime FROM `"+session["user"]+"_batchs` WHERE id = "+bid+";")
+            recf = curtime.fetchall()
+            print(recf)
+            mysql.connection.commit()
+            curtime.close()
+            
+            now = datetime.now()
+            print(now)
+            
+            stime = str(recf[0][0]) 
+            print(stime[0:2])
+            etime = str(recf[0][1]) 
+            print(etime[0:1])
+            
+            dstime = now.replace(hour=int(stime[0:2]), minute=int(stime[3:6]), second=0, microsecond=0)
+            detime = now.replace(hour=int(etime[0:2]), minute=int(etime[3:6]), second=0, microsecond=0)
+            print(dstime)
+            print(detime)
+            
+            if(now>=dstime and now <= detime):
+                cur = mysql.connection.cursor()
+                cur.execute("SELECT bid, name FROM `"+session['user']+"_students` WHERE sid= "+sid+" and bid = "+bid+";")
+                d = cur.fetchall()
+                mysql.connection.commit()
+                cur.close()
+                if(len(d)!=0):
+                    checkcur = mysql.connection.cursor()
+                    today = date.today()
+                    print(today)
+                    checkcur.execute("SELECT sid from `"+session["user"]+"_records` WHERE bid = "+bid+" AND sid = "+sid+" and subject = '"+sub+"' and edate = '"+str(today)+"';")
+                    info = checkcur.fetchall()
+                    print(info)
+                    mysql.connection.commit()
+                    checkcur.close()
+                    cursor = mysql.connection.cursor()
+                    
+                    if(len(info) == 0):
+                        cursor.execute("INSERT INTO `"+session["user"]+"_records` (`bid`, `sid`, `sname`, `etime`, `subject`, `edate`) VALUES ("+bid+", "+sid+", '"+d[0][1]+"', current_timestamp(), '"+sub+"', '"+str(today)+"');")
+                        mysql.connection.commit()
+                        cursor.close()
+                        session["almsg"] = "Attendance Added Successfully...."
+                        session["alcode"] = "alert alert-success"
+                    else:
+                        session["almsg"] = "your attendance for this subject is already exist...."
+                        session["alcode"] = "alert alert-danger"
+                else:
+                    session["almsg"] = "Attendance Not Added..."
+                    session["alcode"] = "alert alert-danger"
+            else:
+                session["almsg"] = "college is closed Attendance Not Added..."
+                session["alcode"] = "alert alert-danger"
+                
+        except Exception as e:
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT bid, name FROM `"+session['user']+"_students` WHERE sid= "+sid+";")
+            d = cur.fetchall()
+            # da = json.loads(d[0][0])
+            print(d)
+            mysql.connection.commit()
+            cur.close()
+            if(d!=0):
+                cursor = mysql.connection.cursor()
+                today = date.today()
+                cursor.execute("CREATE TABLE `"+session['user']+"_records` (`id` INT AUTO_INCREMENT , `bid` INT NOT NULL , `sid` INT NOT NULL , `sname` TEXT NOT NULL , `etime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `subject` TEXT NOT NULL , `edate` TEXT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;")
+                cursor.execute("INSERT INTO `"+session["user"]+"_records` (`id`, `bid`, `sid`, `sname`, `etime`, `subject`, `edate`) VALUES ('1', "+bid+", "+sid+", '"+d[0][1]+"', current_timestamp(), '"+sub+"', '"+str(today)+"');")
+                # d = cursor.fetchall()
+                # da = json.loads(d[0][0])
+                # print(len(d))
+                mysql.connection.commit()
+                cursor.close()
+        return redirect("/")
+    else:
+        return redirect("/")
+
+# INSERT INTO `records` (`id`, `bid`, `sid`, `sname`, `etime`, `subject`) VALUES ('1', '1', '1', 'niraj', current_timestamp(), 'dbms');
 
 
 if __name__ == "__main__":

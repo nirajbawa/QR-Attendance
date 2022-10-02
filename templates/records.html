@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block body %}
+
+
+<ul class="nav justify-content-center">
+    <li class="nav-item">
+      <a class="nav-link active" aria-current="page" href="/Admin/records/all/1/">All</a>
+      </li>
+      
+      {% for data in d %}
+      <li class="nav-item">
+        <a class="nav-link" aria-current="page" href="/Admin/records/{{data}}/{{id}}/">{{data}}</a>
+    </li>
+   
+    {% endfor %}
+    <a class="nav-link active" aria-current="page" href="/Admin/records/tdayr/{{id}}/">today's record</a>
+  </ul>
+
+
+  
+  <!-- <div class="batchesdiv">
+    <div class="batchtitle">batchs</div>
+    {% for data in numofrow %}
+    <div class="batchinfo">
+      <p>{{data[0]}}</p>
+      <div>
+             <a href="/Admin/addstudents/{{data[1]}}"><button type="button" class="btn btn-primary">view students</button></a>
+     <a href="/Admin/records/{{data[1]}}"><button type="button" class="btn btn-primary">view Attendance records</button></a>
+      </div>
+    </div>
+    {% endfor %}
+  </div> -->
+
+    
+<div class="batchesdiv">
+    <div class="batchtitle"><b>students</b></div>
+    {% for data in row %}
+    <div class="batchinfo">
+      <div>
+        <p>batch  id : {{data[1]}}</p>
+        <p>Roll no : {{data[2]}}</p>
+        <p>name : {{data[3]}}</p>
+        <p>subject : {{data[5]}}</p>
+        <p>Entry date : {{data[4]}}</p>
+      </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% for element in records["recordsdata"] %}
+<script src="{{ url_for('static', filename=element)}}"></script>
+{% endfor %}
+
+{% endblock %}

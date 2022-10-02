@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
 {% block body %}
-<div class="admain">
-    <div>add attendance</div>
-    <div>edit existing records</div>
-    <div>view attendance records</div>
-    <div>create new batch</div>
+<div class="admain"> 
+    <div class="{{aldata["albc"]}}" role="alert" style="display:{{aldata["alboxd"]}};  font-size: 2rem;" class="alertbox" >
+       {{aldata["alboxm"]}}
+      </div>
+    <a href="/Admin/creare-new-batch">view batches</a>
 </div>
 {% endblock %}

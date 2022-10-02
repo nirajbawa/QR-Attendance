@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block body %}
+
+
+<ul class="nav justify-content-center">
+  <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" id="subs" onclick="func()" value="">
+    {% for element in d %}
+    <option value="{{element}}">{{element}}</option>
+{% endfor %}
+  </select>
+  <a href="" id="link"><button type="button" class="btn btn-primary">Add Attendance</button></a>
+</ul>
+ 
+
+<script>
+  function func() {
+    console.log(   document.getElementById("subs").value)
+    let subj = document.getElementById("subs").value
+    document.getElementById("link").setAttribute("href", "/Admin/addattendance/{{sid}}/{{bid}}/{{semail}}/"+subj)
+ 
+}
+
+
+console.log("hell")
+</script>
+
+{% for element in scanner["scannerdata"] %}
+<script src="{{ url_for('static', filename=element)}}"></script>
+{% endfor %}
+
+
+
+
+
+{% endblock %}

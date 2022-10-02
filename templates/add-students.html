@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<ul class="nav justify-content-center">
+    <li class="nav-item">
+      <a class="nav-link active" aria-current="page" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Add New Student
+      </a>
+    </li>
+  </ul>
+
+
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="POST", action="/Admin/addNS/">
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Student Name:</label>
+              <input type="text" class="form-control" name="sname" id="batchname">
+            </div>
+            <div class="mb-3">
+                <label for="recipient-name" class="col-form-label">Student Email:</label>
+                <input type="text" class="form-control" name="semail" id="batchname">
+              </div>
+              <div class="mb-3" style="display: none;">
+                <input type="text" class="form-control" name="bid" id="batchname" value="{{batchid}}">
+              </div>
+              <div class="mb-3">
+                <label for="recipient-name" class="col-form-label">Student Roll No:</label>
+                <input type="text" class="form-control" name="rollno" id="batchname">
+              </div>  
+         
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" id="createbtn">Add</button>
+        </div>
+    </form>
+      </div>
+    </div>
+  </div>
+
+
+
+  
+<div class="batchesdiv">
+    <div class="batchtitle"><b>students</b></div>
+    {% for data in rows %}
+    <div class="batchinfo">
+      <div>
+        <p>batch  id : {{data[1]}}</p>
+        <p>Student id : {{data[0]}}</p>
+        <p>name : {{data[2]}}</p>
+        <p>email : {{data[3]}}</p>
+      </div>
+     <a href="/Admin/qrdown/{{data[0]}}/{{data[1]}}/{{data[3]}}"><button type="button" class="btn btn-primary">download QR code</button></a>
+    </div>
+    {% endfor %}
+</div>
+  
+<script>
+  let altmsg = "{{saltdata['altmsg']}}";
+  let altd = "{{saltdata['altd']}}";
+  if(altd=="block")
+  {
+    alert(altmsg);
+  }
+</script>
+
+{% for element in addstudents["addstudentsdata"] %}
+<script src="{{ url_for('static', filename=element)}}"></script>
+{% endfor %}
+
+{% endblock %}
