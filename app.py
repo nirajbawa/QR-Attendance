@@ -8,6 +8,7 @@ from pyqrcode import QRCode
 import os
 import json
 from datetime import date, datetime
+# <venv>\Scripts\activate.bat
 
  
 defaultData = {
