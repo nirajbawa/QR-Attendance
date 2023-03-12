@@ -1,0 +1,76 @@
+.admain{
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+    font-size: 2rem;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+    text-transform: capitalize;
+    padding: 8% 36%;
+}
+
+.admain a{
+    width: 100%;
+    text-align: center;
+    height: 10rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #b2f7fd8a;
+    border-radius: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    color:  black;
+    transition: all 0.5s;
+}
+
+.admain a:hover{
+    background: #98f6ffe6;
+}
+
+.alertbox{
+    font-size: 3rem;
+}
+
+.alert-success {
+    font-size: 1.5rem;
+    width: 160%;
+    text-align: center;
+}
+
+@media only screen and (max-width: 500px)
+{
+    .admain {
+        display: flex;
+        flex-direction: column;
+        gap: 4rem;
+        font-size: 1.5rem;
+        align-items: center;
+        justify-content: space-between;
+        height: 100%;
+        width: 100%;
+        text-transform: capitalize;
+        padding: 35% 10%;
+    }
+    
+.admain a {
+    font-size: 2.5rem;
+}
+
+.admain a {
+    width: 100%;
+    text-align: center;
+    height: 13rem;
+
+}
+
+.alert-success {
+    font-size: 2rem;
+    width: 100%;
+    text-align: center;
+}
+
+}

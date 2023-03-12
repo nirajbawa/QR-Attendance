@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+{% block body %}
+<ul class="nav justify-content-center">
+    <li class="nav-item">
+      <a class="nav-link active" aria-current="page" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Create New Batch
+      </a>
+    </li>
+  </ul>
+
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Enter Batch Name:</label>
+              <input type="text" class="form-control" id="batchname">
+            </div>
+            <div class="subject">
+              <div class="addinput">Enter Subject Names</div>
+                <div class="addinput" id="addinputbtn"><i class="fa-solid fa-plus"></i></div>
+                <div class="sunjectinputs">
+                    <input type="text" class="form-control" id="0" placeholder="Enter Subject Name">
+                </div>
+            </div>
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Please Enter College Start Time</label>
+              <input type="time" class="form-control" id="cStartT">
+            </div>
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Please Enter College End Time</label>
+              <input type="time" class="form-control" id="cEndT">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="createbtn">Create</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
+  <div class="batchesdiv">
+    <div class="batchtitle">batchs</div>
+    {% for data in numofrow %}
+    <div class="batchinfo">
+      <p>{{data[0]}}</p>
+      <div>
+             <a href="/Admin/addstudents/{{data[1]}}"><button type="button" class="btn btn-primary">view students</button></a>
+     <a href="/Admin/records/all/{{data[1]}}"><button type="button" class="btn btn-primary">view Attendance records</button></a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  
+  {% for element in createNewBatchdata["createNewBatchdata"] %}
+  <script src="{{ url_for('static', filename=element)}}"></script>
+  {% endfor %}
+{% endblock %}

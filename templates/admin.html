@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="admain"> 
+    <div class="{{aldata["albc"]}}" role="alert" style="display:{{aldata["alboxd"]}};  font-size: 2rem;" class="alertbox" >
+       {{aldata["alboxm"]}}
+      </div>
+    <a href="/Admin/creare-new-batch">view batches</a>
+</div>
+{% endblock %}

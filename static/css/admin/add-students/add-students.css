@@ -1,0 +1,144 @@
+
+
+.content{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+    gap: 5rem;
+    padding: 5% 0%;
+
+}
+
+.nav-link {
+    font-size: 1.9rem;
+}
+
+.nav {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+    margin-top: 0rem;
+    list-style: none;
+    background: #f8f9fa;
+    width: 100%;
+}
+
+.nav-link{
+    cursor: pointer;
+}
+
+
+.h5, h5 {
+    font-size: 2rem;
+}
+
+.col-form-label {
+    font-size: medium;
+}
+
+.btn-primary {
+    font-size: 1.5rem;
+}
+
+.btn-secondary {
+    font-size: 1.5rem;
+}
+
+.form-control {
+    font-size: 2rem;
+}
+
+.subject{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    flex-direction: column;
+    gap: 3rem;
+    margin: 10% 0%;
+}
+
+.addinput{
+    width: 100%;
+    text-align: center;
+    font-size: 2rem;
+    background: #f8f8f8;
+    cursor: pointer;
+}
+
+
+.sunjectinputs{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 2rem;
+    flex-direction: column;
+}
+
+.form-control {
+    font-size: 1.5rem;
+}
+
+.batchesdiv{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5rem;
+    padding: 5% 0%;
+    height: 100%;
+}
+
+.batchinfo{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 78%;
+    background-color: #f6f6f6;
+    flex-direction: row;
+    align-items: center;
+    padding: 2% 5%;
+    gap: 0rem 5rem;
+    height: auto;
+    border-radius: 1rem;
+}
+
+.batchtitle{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background-color: #f6f6f6;
+    flex-direction: row;
+    align-items: center;
+    padding: 0% 5%;
+    gap: 0rem 5rem;
+    height: 7rem;
+    font-size: 2rem;
+    text-transform: uppercase;
+}
+
+.batchinfo p{
+    font-size: 2rem;
+    text-transform: capitalize;
+    margin: 0%;
+}
+
+.batchinfo button{
+    text-transform: capitalize;
+}
+
+@media only screen and (max-width: 500px)
+{
+    .batchinfo {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 88%;
+    }
+}

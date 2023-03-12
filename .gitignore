@@ -1,0 +1,4 @@
+__pycache__/
+static/images/qrcodes/
+env/
+.env

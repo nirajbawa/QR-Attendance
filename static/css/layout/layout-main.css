@@ -1,0 +1,87 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+
+html{
+    font-size: 62.5%;
+}
+
+
+.navbar {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
+    width: 100%;
+    border-bottom: 0.1rem solid #cbcbcbb8;
+}
+
+.sticky {
+    position: fixed;
+    top: 0;
+    width: 100%
+  }
+
+  .sticky + .content {
+    padding-top: 102px;
+  }
+
+.navbar-brand {
+    font-size: 2.5rem;
+}
+
+.navbar-nav {
+    font-size: 2rem;
+    gap: 0rem 1rem;
+    text-transform: capitalize;
+}
+
+.navbar-expand-lg .navbar-collapse {
+    justify-content: end;
+}
+
+.navbar-toggler {
+    font-size: 2rem;
+    border-radius: .5rem;
+}
+
+.navbar-nav .nav-link {
+    cursor: pointer;
+}
+
+
+@media only screen and (max-width: 1040px)
+{
+    html{
+        font-size: 50.7%;
+    }
+}
+
+@media only screen and (max-width: 840px)
+{
+    html{
+        font-size: 45%;
+    }
+}
+
+
+
+@media only screen and (max-width: 700px)
+{
+    html{
+        font-size: 38%;
+    }
+}
+
+
+@media only screen and (max-width: 500px)
+{
+    html{
+        font-size: 46%;
+    }
+}
+

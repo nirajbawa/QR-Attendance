@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block body %}
+<main class="main-body" style="background-image: url( '{{ url_for('static', filename='images/home/main.svg')}}' );">
+    <div class="leftdiv">
+        <img src="{{ url_for('static', filename='images/home/logo2.png')}}" alt="logo">
+    </div>
+
+    <div class="rightdiv">
+        <form action="/sign-in" method="post" id="hfrom">
+           
+        </form>
+    </div>
+</main>
+
+<script src="{{ url_for('static', filename=homedata.homeJs[0])}}"></script>
+
+{% endblock %}
