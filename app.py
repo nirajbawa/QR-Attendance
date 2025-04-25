@@ -492,17 +492,17 @@ def addattendance(sid,umail,sub, bid):
             now = datetime.now()
             print(now)
             
-            stime = str(recf[0][0]) 
-            print(stime[0:2])
-            etime = str(recf[0][1]) 
-            print(etime[0:1])
+            # stime = str(recf[0][0]) 
+            # print(stime[0:2])
+            # etime = str(recf[0][1]) 
+            # print(etime[0:1])
             
-            dstime = now.replace(hour=int(stime[0:2]), minute=int(stime[3:6]), second=0, microsecond=0)
-            detime = now.replace(hour=int(etime[0:2]), minute=int(etime[3:6]), second=0, microsecond=0)
-            print(dstime)
-            print(detime)
+            # dstime = now.replace(hour=int(stime[0:2]), minute=int(stime[3:6]), second=0, microsecond=0)
+            # detime = now.replace(hour=int(etime[0:2]), minute=int(etime[3:6]), second=0, microsecond=0)
+            # print(dstime)
+            # print(detime)
             
-            if(now>=dstime and now <= detime):
+            if(True):
                 cur = mysql.connection.cursor()
                 cur.execute("SELECT bid, name FROM `"+session['user']+"_students` WHERE sid= "+sid+" and bid = "+bid+";")
                 d = cur.fetchall()
